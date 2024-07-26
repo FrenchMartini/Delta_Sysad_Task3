@@ -1,0 +1,7 @@
+FROM postgres:14
+
+
+#COPY SQL SCRIPT INTO CONTAINER ININITIALISATION DIRECTORY 
+COPY ./init.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 5432

@@ -7,7 +7,7 @@ conn = psycopg2.connect(
     database="task3",
     user="myuser",
     password="mypassword",
-    host="localhost",
+    host="db-1",
     port="5432"
 )
 cursor = conn.cursor()
@@ -131,6 +131,9 @@ def main():
         
         data = client_socket.recv(1024).decode('utf-8')
         response = handle_client(data)
+        
+        thread = threading.Thread(target=handle_client, args=(conn, addr))
+        thread.start()
         
         client_socket.send(response.encode('utf-8'))
         client_socket.close()

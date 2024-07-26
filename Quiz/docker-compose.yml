@@ -1,0 +1,28 @@
+version: '3'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=task3
+      - DB_USER=postgres
+      - DB_PASSWORD=
+  db:
+    build: 
+      context: .
+      dockerfile: db.dockerfile
+    image: postgres
+    restart: always
+    environment:
+     - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+
+   
