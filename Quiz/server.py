@@ -146,7 +146,7 @@ def main():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', 12346))
     server_socket.listen(5)
-    print("Server is listening on port 12345")
+    print("Server is listening on port 12346")
 
     while True:
         client_socket, addr = server_socket.accept()
