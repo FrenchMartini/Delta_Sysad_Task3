@@ -1,6 +1,5 @@
-CREATE DATABASE task3;
-\connect task3
-
+CREATE DATABASE postgres;
+\c  postgres
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (

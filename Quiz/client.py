@@ -1,20 +1,10 @@
 import socket
 
-
-#Using this so that it is easier to understand later on
-IP = socket.gethostbyname("localhost")
-PORT = 9876
-ADDR = (IP, PORT)
-FORMAT = "utf-8"
-SIZE = 1024
-
-
-
 def register(client_socket, username, password):
 
     msg= f"register,{username},{password}"
-    client_socket.send(msg.encode(FORMAT))
-    response=client_socket.recv(SIZE).decode(FORMAT)
+    client_socket.send(msg.encode('utf-8'))
+    response=client_socket.recv(1024).decode('utf-8')
     return response
 
 
@@ -36,15 +26,19 @@ def add_question(client_socket, username, password):
 
 
 def answer_question(client_socket, username, password):
-    client_socket.send(f"view_questions,{username},{password}".encode('utf-8'))
-    questions = client_socket.recv(4096).decode('utf-8')
-    print(questions)
-    question_id = input("Enter the question_id which you want to answer: ")
-    answer_text = input("Enter your answer: ")
-    msg = f"answer_question,{username},{password},{question_id},{answer_text}"
-    client_socket.send(msg.encode('utf-8'))
-    response = client_socket.recv(1024).decode('utf-8')
-    print(response)
+    try : 
+        client_socket.send(f"view_questions,{username},{password}".encode('utf-8'))
+        questions = client_socket.recv(4096).decode('utf-8')
+        print(questions)
+        question_id = input("Enter the question_id which you want to answer: ")
+        answer_text = input("Enter your answer: ")
+        msg = f"answer_question,{username},{password},{question_id},{answer_text}"
+        client_socket.send(msg.encode('utf-8'))
+        response = client_socket.recv(1024).decode('utf-8')
+        print(response)
+    except Exception as e:
+        print(f"Error in answer_question: {e}")
+
 
 def view_questions(client_socket, username, password):
     msg = f"view_questions,{username},{password}"
@@ -63,18 +57,21 @@ def main():
     
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect(('localhost',12345))
+    client_socket.connect(('localhost',12346))
 
     print("\nOptions:")
     print("1. Register")
     print("2. Login")
     auth_check=input("Enter the method which you want to use to authenticate\n")
-    username=input("Enter your username")
-    password=input("Enter your password")
+    username=input("Enter your username:\n")
+    password=input("Enter your password:\n")
     if auth_check =="1":
-        register(client_socket,username,password)
+
+        result = register(client_socket,username,password)
+        print(result)
     elif auth_check=="2":
-        login(client_socket,username,password)
+        result = login(client_socket,username,password)
+        print(result)
 
     print("\nPlease choose what you would like to do next :")
     print("1. Add Question")

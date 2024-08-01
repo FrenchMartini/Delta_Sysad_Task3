@@ -9,20 +9,35 @@ services:
     depends_on:
       - db
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_NAME=task3
-      - DB_USER=postgres
-      - DB_PASSWORD=
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+      
+    ports:
+      - "12346:12346"
+    networks:
+      - default
+
   db:
     build: 
       context: .
       dockerfile: db.dockerfile
-    image: postgres
     restart: always
     environment:
-     - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     ports:
       - "5432:5432"
-
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - default
    
+volumes:
+  db-data:
+
+networks:
+  default:
+    driver: bridge
